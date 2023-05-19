@@ -1,7 +1,7 @@
-package com.example.last_month.presentation
+package com.example.last_month.presentation.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.last_month.R
 
 class MainActivity : AppCompatActivity() {

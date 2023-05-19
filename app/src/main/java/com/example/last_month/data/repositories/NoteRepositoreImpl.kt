@@ -1,5 +1,6 @@
 package com.example.last_month.data.repositories
 
+import com.example.last_month.data.base.BaseRepository
 import com.example.last_month.data.local.NoteDao
 import com.example.last_month.data.mappers.toEntity
 import com.example.last_month.data.mappers.toNote
@@ -14,57 +15,28 @@ import java.util.concurrent.Flow
 
 import javax.inject.Inject
 
+
 class NoteRepositoryImpl @Inject constructor(
     private val noteDao: NoteDao
-) : NoteRepository {
-    override fun createNote(noteEntity: Note): kotlinx.coroutines.flow.Flow<Resource<Unit>> {
-        return flow {
-            emit(Resource.Loading())
-            try {
-                val data = noteDao.createNote(noteEntity.toEntity())
-                emit(Resource.Success(data))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "unknown error"))
-            }
-        }.flowOn(Dispatchers.IO)
+) : BaseRepository(), NoteRepository {
+    override fun createNote(note: Note) = doRequest{
+        noteDao.createNote(note.toEntity())
     }
 
 
-    override fun getAllNotes(): kotlinx.coroutines.flow.Flow<Resource<List<Note>>>{
-        return flow {
-            emit(Resource.Loading())
-            try {
-                val data = noteDao.getAllNotes().map { it.toNote() }
-                emit(Resource.Success(data))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "unknown error"))
-            }
-        }
+    override fun getAllNotes()= doRequest{
+        noteDao.getAllNotes().map { it.toNote() }
     }
 
 
-    override fun editNote(noteEntity: Note) : kotlinx.coroutines.flow.Flow<Resource<Unit>> {
-        return flow {
-            emit(Resource.Loading())
-            try {
-                val data = noteDao.editNote(noteEntity.toEntity())
-                emit(Resource.Success(data))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "unknown error"))
-            }
-        }.flowOn(Dispatchers.IO)
+    override fun editNote(note: Note) = doRequest{
+        noteDao.editNote(note.toEntity())
     }
 
-    override fun removeNote(noteEntity: Note) : kotlinx.coroutines.flow.Flow<Resource<Unit>> {
-        return flow {
-            emit(Resource.Loading())
-            try {
-                val data = noteDao.removeNote(noteEntity.toEntity())
-                emit(Resource.Success(data))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "unknown error"))
-            }
-        }.flowOn(Dispatchers.IO)
+
+    override fun removeNote(note: Note)= doRequest{
+        noteDao.removeNote(note.toEntity())
     }
+
 
 }

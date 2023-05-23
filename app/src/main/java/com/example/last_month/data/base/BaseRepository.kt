@@ -1,6 +1,5 @@
 package com.example.last_month.data.base
 
-import com.example.last_month.domain.utils.Resource
 import kotlinx.coroutines.flow.flow
 
 abstract class BaseRepository{

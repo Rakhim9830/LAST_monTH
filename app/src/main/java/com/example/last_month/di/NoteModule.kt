@@ -1,12 +1,9 @@
-package com.example.last_month.di
-
-import android.content.Context
-import androidx.room.Room
 import com.example.last_month.data.local.NoteDao
 import com.example.last_month.data.local.NoteDataBase
-
 import com.example.last_month.data.repositories.NoteRepositoryImpl
 import com.example.last_month.domain.repositories.NoteRepository
+import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,17 +23,14 @@ object NoteModule {
         context,
         NoteDataBase::class.java,
         "note_db"
-    )
+    ).build()
 
     @Provides
-    fun provideNoteDao(noteDataBase: NoteDataBase) = noteDataBase.noteDao()
+    fun provideNoteDao(noteDatabase: NoteDataBase) = noteDatabase.noteDao()
 
     @Provides
-    fun provideNoteRepository(noteDao: NoteDao) : NoteRepository {
+    fun provideNoteRepository(noteDao: NoteDao): NoteRepository {
         return NoteRepositoryImpl(noteDao)
     }
-
-
 }
-
 

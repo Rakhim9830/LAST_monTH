@@ -1,7 +1,6 @@
 package com.example.last_month.presentation.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +25,12 @@ class ListOfNoteFragment : BaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentListOfNoteBinding.inflate(inflater, container, false)
         return binding.root
         adapter = ListOfNoteAdapter(this::removeNote, this::editClick)
         binding.noteRv.adapter = adapter
+        loadView()
     }
 
 
@@ -41,7 +41,7 @@ class ListOfNoteFragment : BaseFragment() {
         }
     }
 
-    fun editClick(note: Note, id: Int){
+    fun editClick(note: com.example.last_month.domain.model.Note, id: Int){
         findNavController().navigate(R.id.create, bundleOf(
             "note" to note,
             "id" to id
@@ -53,11 +53,14 @@ class ListOfNoteFragment : BaseFragment() {
         viewModel.getAllNoteState.collectState(state = {state->
             binding.progressBar.isVisible = state is UIState.Loading
         }, onSuccess = { data ->
+            adapter = ListOfNoteAdapter(this::removeNote, this::editClick)
+            binding.noteRv.adapter = adapter
+            binding.progressBar.visibility = View.GONE
             adapter.addNotes(data)
         })
     }
 
-    private fun removeNote(note: Note, id: Int) {
+    private fun removeNote(note: com.example.last_month.domain.model.Note, id: Int) {
         viewModel.removeNote(note)
         viewModel.removeNoteState.collectState(state = {state->
             binding.progressBar.isVisible = state is UIState.Loading
